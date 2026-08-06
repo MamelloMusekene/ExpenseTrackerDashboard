@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Tracker Dashboard</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- ================= NAVIGATION ================= -->
+
+<div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+
+    <h2>Expense<br>Tracker</h2>
+
+    <nav>
+
+        <a href="{{ url_for('dashboard') }}" class="active">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('reports') }}">
+            Reports
+        </a>
+
+        <a href="{{ url_for('export_csv') }}">
+            Export CSV
+        </a>
+
+        <a href="{{ url_for('logout') }}">
+            Logout
+        </a>
+
+    </nav>
+
+</div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+
+         <div class="top-bar">
+
+         <div class="welcome-card">
+
+    <div>
+
+        <h1>Welcome back, {{ session["username"] }} </h1>
+
+        <p>{{ today }}</p>
+
+    </div>
+
+    <div class="welcome-badge">
+
+        Expense Tracker
+
+    </div>
+
+</div>
+
+    <div class="top-actions">
+
+        <button id="themeToggle" class="btn">
+             Dark Mode
+        </button>
+
+    </div>
+
+</div>
+<!-- ================= CONTAINER ================= -->
+
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div class="alert {{ category }}">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+    <div class="header">
+
+        <h1>Expense Tracker Dashboard</h1>
+
+        <p>Monitor your finances in one place.</p>
+
+        <p><strong>Date:</strong> {{ today }}</p>
+
+    </div>
+
+    <!-- SUMMARY CARDS -->
+
+    <div class="cards">
+
+       <div class="card income">
+        <h2>
+            <i class="fa-solid fa-wallet"></i>
+            Total Income
+         </h2>
+         
+         <p class="counter" data-target="{{ total_income }}"></p>
+        </div>
+
+       <div class="card expense">
+        <h2>
+            <i class="fa-solid fa-credit-card"></i>
+            Total Expenses
+        </h2>
+
+        <p class="counter" data-target="{{ total_expenses }}"></p>
+    </div>
+
+        <div class="card balance">
+            <h2>
+                <i class="fa-solid fa-chart-line"></i>
+                Balance
+            </h2>
+            
+            <p class="counter" data-target="{{ balance }}"></p>
+        </div>
+
+    </div>
+
+
+  <!-- QUICK STATISTICS -->
+
+    <h2 class="section-title">
+        Quick Statistics
+    </h2>
+
+    <div class="cards">
+
+        <div class="card balance">
+            <h2>Total Transactions</h2>
+            <p class="count" data-target="{{ expense_count}}"></p>
+        </div>
+
+        <div class="card income">
+            <h2>Largest Income</h2>
+            <p class="counter" data-target="{{ max_income }}"></p>
+        </div>
+
+        <div class="card expense">
+            <h2>Largest Expense</h2>
+            <p class="counter" data-target="{{ max_expense }}"></p>
+        </div>
+
+    </div>
+
+    <hr>
+
+ <!-- ADD TRANSACTION -->
+  <div class="dashboard-section">
+
+    <h2 class="section-title">Add Transaction</h2>
+
+    <form action="/add" method="POST" class="dashboard-form">
+
+        <select name="type" required>
+
+            <option value="">Select Type</option>
+            <option value="Income">Income</option>
+            <option value="Expense">Expense</option>
+
+        </select>
+
+        <select name="category" required>
+
+            <option value="">Select Category</option>
+
+            <option>Salary</option>
+            <option>Food</option>
+            <option>Transport</option>
+            <option>Shopping</option>
+            <option>Bills</option>
+            <option>Entertainment</option>
+            <option>Health</option>
+            <option>Education</option>
+            <option>Savings</option>
+            <option>Other</option>
+
+        </select>
+
+        <input
+            type="number"
+            step="0.01"
+            name="amount"
+            placeholder="Amount"
+            required>
+
+        <input
+            type="date"
+            name="date"
+            required>
+
+        <button class="btn" type="submit">
+            Save Transaction
+        </button>
+
+    </form>
+    </div>
+
+    <hr>
+
+
+ <!-- SEARCH -->
+  <div class="dashboard-section">
+
+    <h2 class="section-title">Search Transactions</h2>
+
+    <form action="/dashboard" method="GET" class="search-form">
+
+        <input
+            type="text"
+            name="search"
+            placeholder="Search by category..."
+            value="{{ search }}">
+
+        <button class="btn" type="submit">
+            Search
+        </button>
+
+    </form>
+    </div>
+
+
+ <!-- FILTER -->
+
+    <h2>Filter by Month</h2>
+
+    <form action="/dashboard" method="GET" class="search-form">
+
+        <input
+            type="month"
+            name="month"
+            value="{{ month }}">
+
+        <button class="btn" type="submit">
+            Filter
+        </button>
+
+        <a href="/dashboard" class="btn">
+            Clear
+        </a>
+
+    </form>
+
+    <br>
+
+    <a href="/export" class="btn">
+        Export CSV
+    </a>
+
+    <hr>
+
+ <!-- TRANSACTIONS -->
+  <div class="table-card">
+
+    <div class="table-header">
+
+        <h2>Recent Transactions</h2>
+
+    </div>
+    <table class="transaction-table">
+
+        <thead>
+
+        <tr>
+
+             <th>Transaction</th>
+             <th>Category</th>
+             <th>Amount</th>
+             <th>Date</th>
+             <th>Actions</th>
+
+        </tr>
+
+        </thead>
+
+        <tbody>
+
+        {% if transactions %}
+
+            {% for transaction in transactions %}
+
+            <tr>
+
+                <td>
+
+                    {% if transaction.type == "Income" %}
+
+                        <span class="income">
+                            {{ transaction.type }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="expense">
+                            {{ transaction.type }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>{{ transaction.category }}</td>
+
+                <td>
+
+                    {% if transaction.type == "Income" %}
+
+                        <span class="amount-income">
+                            +R{{ "%.2f"|format(transaction.amount) }}
+                        </span>
+
+                    {% else %}
+
+                        <span class="amount-expense">
+                            -R{{ "%.2f"|format(transaction.amount) }}
+                        </span>
+
+                    {% endif %}
+
+                </td>
+
+                <td>{{ transaction.date }}</td>
+
+                <td>
+                    <div class="action-buttons">
+                        <a href="{{ url_for('edit_transaction', id=transaction.id) }}"
+                        class="edit-btn">
+
+                        Edit
+
+                    </a>
+                    
+                    <a href="{{ url_for('delete_transaction', id=transaction.id) }}"
+                    class="delete-btn">
+                    
+                    Delete
+                
+                </a>
+            
+            </div>
+
+                </td>
+
+            </tr>
+
+            {% endfor %}
+
+        {% else %}
+
+            <tr>
+
+                <td colspan="6" style="text-align:center;padding:40px;color:#94a3b8;">
+                    No transactions yet.
+                    Start by adding your first transaction.
+                </td>
+
+
+            </tr>
+
+        {% endif %}
+
+        </tbody>
+
+    </table>
+    </div>
+
+    <hr>
+
+ <!-- CHART -->
+  <div class="dashboard-section">
+
+    <h2 class="section-title"> Expense Breakdown by Category</h2>
+
+    <canvas id="expenseChart"></canvas>
+    </div>
+
+</div>
+
+<!-- ================= CHART ================= -->
+
+<script>
+const ctx = document.getElementById('expenseChart');
+
+new Chart(ctx, {
+    type: 'pie',
+    data: {
+        labels: [labels | tojson],
+        datasets: [{
+                 data: [values | tojson],
+            backgroundColor: [
+                '#4CAF50',
+                '#2196F3',
+                '#FFC107',
+                '#F44336',
+                '#9C27B0',
+                '#FF9800',
+                '#009688',
+                '#795548',
+                '#607D8B'
+            ],
+            borderColor: '#ffffff',
+            borderWidth: 2
+        }]
+    },
+    options: {
+        responsive: true,
+        plugins: {
+             title: {
+                display: true,
+                text: 'Expenses by Category'
+            },
+            legend: {
+                position: 'bottom'
+            }
+        }
+    }
+});
+</script>
+
+<script>
+
+const themeToggle = document.getElementById("themeToggle");
+
+// Load saved theme
+if(localStorage.getItem("theme") === "dark"){
+
+    document.body.classList.add("dark-mode");
+
+    themeToggle.innerHTML = "Light Mode";
+}
+
+// Toggle theme
+themeToggle.addEventListener("click", function(){
+
+    document.body.classList.toggle("dark-mode");
+
+    if(document.body.classList.contains("dark-mode")){
+
+        localStorage.setItem("theme","dark");
+
+        themeToggle.innerHTML = "Light Mode";
+
+    }else{
+
+        localStorage.setItem("theme","light");
+
+        themeToggle.innerHTML = "Dark Mode";
+
+    }
+
+});
+
+</script>
+
+<script>
+document.querySelectorAll(".counter").forEach(counter => {
+
+    const target = Number(counter.dataset.target);
+
+    let count = 0;
+
+    const speed = target / 100;
+
+    function update() {
+
+        if (count < target) {
+
+            count += speed;
+
+            counter.innerText = "R" + Math.floor(count).toLocaleString();
+
+            requestAnimationFrame(update);
+
+        } else {
+
+            counter.innerText = "R" + target.toLocaleString();
+
+        }
+
+    }
+
+    update();
+
+});
+
+</script>
+<script>
+document.querySelectorAll(".count").forEach(counter => {
+
+    const target = Number(counter.dataset.target);
+
+    let count = 0;
+
+    const speed = target / 100;
+
+    function update() {
+
+        if (count < target) {
+
+            count += speed;
+
+            counter.innerText = Math.floor(count);
+
+            requestAnimationFrame(update);
+
+        } else {
+
+            counter.innerText = target;
+
+        }
+
+    }
+
+    update();
+
+});
+</script>
+<!-- ================= FOOTER ================= -->
+
+<footer>
+
+    <p>
+        Expense Tracker Dashboard © 2026
+    </p>
+
+</footer>
+
+ </div>
+
+    </main>
+
+</div>
+
+
+</body>
+</html>

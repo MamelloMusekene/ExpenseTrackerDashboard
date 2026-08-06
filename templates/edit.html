@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Transaction</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<nav class="navbar">
+
+    <div class="logo">
+         Expense Tracker
+    </div>
+
+    <div class="nav-links">
+
+        <span>
+            Welcome,
+            <strong>{{ session.username }}</strong>
+        </span>
+
+        <a href="{{ url_for('dashboard') }}" class="btn">
+            Dashboard
+        </a>
+
+        <a href="{{ url_for('logout') }}" class="logout-btn">
+            Logout
+        </a>
+
+    </div>
+
+</nav>
+
+<div class="container">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+
+    {% if messages %}
+
+        {% for category, message in messages %}
+
+            <div class="alert {{ category }}">
+
+                {{ message }}
+
+            </div>
+
+        {% endfor %}
+
+    {% endif %}
+
+{% endwith %}
+
+    <h1> Edit Transaction</h1>
+
+    <form action="{{ url_for('update_transaction', id=transaction.id) }}" method="POST">
+
+        <label>Transaction Type</label>
+
+        <select name="type" required>
+
+            <option value="Income"
+                {% if transaction.type == "Income" %}selected{% endif %}>
+                Income
+            </option>
+
+            <option value="Expense"
+                {% if transaction.type == "Expense" %}selected{% endif %}>
+                Expense
+            </option>
+
+        </select>
+
+        <label>Category</label>
+
+        <select name="category" required>
+
+            {% set categories = [
+                'Salary',
+                'Food',
+                'Transport',
+                'Shopping',
+                'Bills',
+                'Entertainment',
+                'Health',
+                'Education',
+                'Other'
+            ] %}
+
+            {% for category in categories %}
+
+            <option value="{{ category }}"
+                {% if transaction.category == category %}selected{% endif %}>
+                {{ category }}
+            </option>
+
+            {% endfor %}
+
+        </select>
+
+        <label>Amount</label>
+
+        <input
+            type="number"
+            step="0.01"
+            name="amount"
+            value="{{ transaction.amount }}"
+            required>
+
+        <label>Date</label>
+
+        <input
+            type="date"
+            name="date"
+            value="{{ transaction.date }}"
+            required>
+
+        <br><br>
+
+        <button type="submit" class="btn">
+            Update Transaction
+        </button>
+
+        <a href="{{ url_for('dashboard') }}" class="btn">
+            Cancel
+        </a>
+
+    </form>
+
+</div>
+
+<footer>
+
+    <p>
+        Expense Tracker Dashboard © 2026
+    </p>
+
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Monthly Reports</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+
+<div class="main-content">
+
+    <div class="header">
+
+        <h1>Financial Reports</h1>
+
+        <p>Analyze your income and expenses.</p>
+
+    </div>
+
+    <div class="cards">
+
+        <div class="card income">
+            <h2>Total Income</h2>
+            <p>R{{ "%.2f"|format(total_income) }}</p>
+        </div>
+
+        <div class="card expense">
+            <h2>Total Expenses</h2>
+            <p>R{{ "%.2f"|format(total_expenses) }}</p>
+        </div>
+
+        <div class="card balance">
+            <h2>Net Savings</h2>
+            <p>R{{ "%.2f"|format(balance) }}</p>
+        </div>
+
+    </div>
+
+    <div class="chart-card">
+
+        <h2>Monthly Income vs Expenses</h2>
+
+        <canvas id="monthlyChart"></canvas>
+
+    </div>
+
+    <div class="chart-card">
+
+        <h2>Expense Categories</h2>
+
+        <canvas id="pieChart"></canvas>
+
+    </div>
+
+    <br>
+
+    <a href="/dashboard" class="btn">
+        Back to Dashboard
+    </a>
+
+</div>
+
+
+<script>
+
+const ctx = document.getElementById("monthlyChart");
+
+new Chart(ctx, {
+
+    type: "bar",
+
+    data: {
+
+        labels: { months , tojson },
+
+        datasets: [
+
+            {
+                label: "Income",
+                data: { income_values , tojson },
+                backgroundColor: "#22c55e"
+            },
+
+            {
+                label: "Expenses",
+                data: { expense_values , tojson },
+                backgroundColor: "#ef4444"
+            }
+
+        ]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false,
+
+        animation: {
+
+            duration: 1500
+        },
+
+        plugins: {
+
+             legend: {
+
+                position: "bottom"
+
+            }
+
+        }
+
+    }
+
+});
+
+const pieCtx = document.getElementById("pieChart");
+
+new Chart(pieCtx, {
+
+    type: "pie",
+
+    data: {
+
+        labels: ["Income", "Expenses"],
+
+        datasets: [{
+
+            data: [
+
+                { total_income },
+
+                { total_expenses }
+
+            ],
+
+            backgroundColor: [
+
+                "#22c55e",
+
+                "#ef4444"
+
+            ]
+
+        }]
+
+    },
+
+    options: {
+
+        responsive: true,
+
+        maintainAspectRatio: false
+
+    }
+
+});
+
+</script>
+
+</body>
+</html>
