@@ -772,3 +772,211 @@ h2{
 ::-webkit-scrollbar-thumb:hover{
     background:#1d4ed8;
 }
+
+/* ==========================================
+   MOBILE RESPONSIVENESS FIX
+   Expense Tracker Dashboard
+========================================== */
+
+@media screen and (max-width: 768px) {
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden;
+    }
+
+    .layout {
+        display: block;
+        width: 100%;
+        min-width: 0;
+    }
+
+    .main-content {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        margin-left: 0;
+        padding: 24px 16px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 20px auto;
+        padding: 0;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        position: relative;
+        width: 100%;
+        min-height: auto;
+        height: auto;
+        padding: 16px;
+    }
+
+    .sidebar h2 {
+        margin-bottom: 16px;
+        font-size: 22px;
+    }
+
+    .sidebar ul {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .sidebar li {
+        margin: 0;
+    }
+
+    .sidebar a {
+        padding: 10px 12px;
+        margin-bottom: 0;
+    }
+
+    /* Page headings */
+    .header h1,
+    .top-bar h1 {
+        font-size: 25px;
+        line-height: 1.35;
+    }
+
+    .top-bar {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .top-actions {
+        flex-wrap: wrap;
+    }
+
+    /* Income, expenses and balance cards */
+    .cards {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 16px;
+        margin: 20px 0;
+    }
+
+    .card {
+        width: 100%;
+        min-width: 0;
+        padding: 20px;
+    }
+
+    .card p {
+        font-size: 28px;
+        overflow-wrap: anywhere;
+    }
+
+    /* Forms: one field per row */
+    .dashboard-form {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr);
+        gap: 14px;
+        width: 100%;
+        padding: 18px;
+    }
+
+    form {
+        width: 100%;
+        min-width: 0;
+        padding: 18px;
+    }
+
+    input,
+    select,
+    textarea {
+        width: 100%;
+        max-width: 100%;
+        min-width: 0;
+        font-size: 16px;
+    }
+
+    .dashboard-form .btn,
+    form .btn {
+        width: 100%;
+        min-height: 48px;
+        height: auto;
+    }
+
+    /* Search and month filters */
+    form:not(.dashboard-form) {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    /* Recent transactions and tables */
+    .table-card {
+        width: 100%;
+        min-width: 0;
+        padding: 16px;
+        overflow: hidden;
+    }
+
+    .table-header {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+
+    .table-header h2 {
+        font-size: 21px;
+    }
+
+    .transaction-table {
+        width: 100%;
+        table-layout: fixed;
+    }
+
+    .transaction-table th,
+    .transaction-table td {
+        padding: 10px 6px;
+        font-size: 12px;
+        overflow-wrap: anywhere;
+    }
+
+    /* Charts */
+    .chart-card,
+    canvas {
+        max-width: 100%;
+    }
+
+    /* Login and registration */
+    .auth-container {
+        width: 100%;
+        min-height: 100vh;
+        min-height: 100dvh;
+        padding: 20px 16px;
+    }
+
+    .auth-card {
+        width: 100%;
+        max-width: 430px;
+        min-width: 0;
+        padding: 28px 22px;
+    }
+
+    .auth-card h1 {
+        font-size: 27px;
+    }
+
+    .auth-card form {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .auth-card input {
+        margin: 0 0 10px;
+    }
+
+    .auth-card button {
+        width: 100%;
+    }
+
+    /* Avoid hover movement on touch layouts */
+    .card:hover {
+        transform: none;
+    }
+}
