@@ -18,9 +18,20 @@
 <!-- ================= NAVIGATION ================= -->
 
 <div class="layout">
+    <button
+        class="menu-toggle"
+        id="menuToggle"
+        type="button"
+        aria-label="Open navigation menu"
+        aria-expanded="false"
+        aria-controls="sidebar">
+        <span></span>
+        <span></span>
+        <span></span>
+    </button>
 
     <!-- Sidebar -->
-    <div class="sidebar">
+    <div class="sidebar" id="sidebar">
 
     <h2>Expense<br>Tracker</h2>
 
@@ -404,44 +415,66 @@
 
 <!-- ================= CHART ================= -->
 
+
 <script>
 const ctx = document.getElementById('expenseChart');
 
-new Chart(ctx, {
-    type: 'pie',
-    data: {
-        labels: [labels | tojson],
-        datasets: [{
-                 data: [values | tojson],
-            backgroundColor: [
-                '#4CAF50',
-                '#2196F3',
-                '#FFC107',
-                '#F44336',
-                '#9C27B0',
-                '#FF9800',
-                '#009688',
-                '#795548',
-                '#607D8B'
-            ],
-            borderColor: '#ffffff',
-            borderWidth: 2
-        }]
-    },
-    options: {
-        responsive: true,
-        plugins: {
-             title: {
-                display: true,
-                text: 'Expenses by Category'
-            },
-            legend: {
-                position: 'bottom'
+if (ctx) {
+    new Chart(ctx, {
+        type: 'pie',
+
+        data: {
+            labels: {{ labels | tojson }},
+            datasets: [{
+                label: 'Expenses by Category',
+                data: {{ values | tojson }},
+
+                backgroundColor: [
+                    '#22c55e',
+                    '#2563eb',
+                    '#f59e0b',
+                    '#ef4444',
+                    '#8b5cf6',
+                    '#f97316',
+                    '#14b8a6',
+                    '#a16207',
+                    '#64748b'
+                ],
+
+                borderColor: '#ffffff',
+                borderWidth: 3,
+                hoverOffset: 8
+            }]
+        },
+
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+
+            plugins: {
+                title: {
+                    display: true,
+                    text: 'Expenses by Category',
+                    font: {
+                        size: 18,
+                        weight: '600'
+                    },
+                    padding: 20
+                },
+
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 18,
+                        usePointStyle: true
+                    }
+                }
             }
         }
-    }
-});
+    });
+}
 </script>
+
 
 <script>
 
@@ -541,6 +574,59 @@ document.querySelectorAll(".count").forEach(counter => {
 
 });
 </script>
+
+<script>
+(() => {
+    const menuToggle = document.getElementById('menuToggle');
+    const sidebar = document.getElementById('sidebar');
+
+    if (!menuToggle || !sidebar) return;
+
+    const overlay = document.createElement('div');
+    overlay.className = 'mobile-overlay';
+    overlay.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(overlay);
+
+    function closeMenu() {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('visible');
+        menuToggle.setAttribute('aria-expanded', 'false');
+        menuToggle.setAttribute('aria-label', 'Open navigation menu');
+        document.body.classList.remove('menu-open');
+    }
+
+    function openMenu() {
+        sidebar.classList.add('open');
+        overlay.classList.add('visible');
+        menuToggle.setAttribute('aria-expanded', 'true');
+        menuToggle.setAttribute('aria-label', 'Close navigation menu');
+        document.body.classList.add('menu-open');
+    }
+
+    menuToggle.addEventListener('click', () => {
+        if (sidebar.classList.contains('open')) {
+            closeMenu();
+        } else {
+            openMenu();
+        }
+    });
+
+    overlay.addEventListener('click', closeMenu);
+
+    sidebar.querySelectorAll('a').forEach(link => {
+        link.addEventListener('click', closeMenu);
+    });
+
+    document.addEventListener('keydown', event => {
+        if (event.key === 'Escape') closeMenu();
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) closeMenu();
+    });
+})();
+</script>
+
 <!-- ================= FOOTER ================= -->
 
 <footer>

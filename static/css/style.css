@@ -980,3 +980,110 @@ h2{
         transform: none;
     }
 }
+
+/* =========================
+   MOBILE HAMBURGER MENU
+========================= */
+
+.menu-toggle {
+    display: none;
+    position: fixed;
+    top: 16px;
+    left: 16px;
+    z-index: 1200;
+    width: 46px;
+    height: 46px;
+    padding: 11px;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 14px rgba(15, 23, 42, 0.12);
+    cursor: pointer;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 21px;
+    height: 2px;
+    border-radius: 2px;
+    background: #0f172a;
+    transition: transform 0.25s ease, opacity 0.25s ease;
+}
+
+/* Dark overlay behind the open menu */
+.mobile-overlay {
+    display: none;
+}
+
+/* Mobile layout */
+@media (max-width: 768px) {
+
+    .menu-toggle {
+        display: flex;
+    }
+
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        width: min(280px, 85vw);
+        min-height: 100vh;
+        z-index: 1100;
+        overflow-y: auto;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+        box-shadow: none;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+        box-shadow: 12px 0 35px rgba(0, 0, 0, 0.18);
+    }
+
+    .mobile-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 1000;
+        background: rgba(15, 23, 42, 0.45);
+        opacity: 0;
+        visibility: hidden;
+        transition: opacity 0.3s ease, visibility 0.3s ease;
+    }
+
+    .mobile-overlay.visible {
+        opacity: 1;
+        visibility: visible;
+    }
+
+    .main-content {
+        margin-left: 0 !important;
+        width: 100%;
+        min-width: 0;
+        padding: 78px 16px 28px;
+    }
+
+    .container {
+        width: 100%;
+        max-width: 100%;
+        margin: 20px auto;
+    }
+
+    body.menu-open {
+        overflow: hidden;
+    }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+    .sidebar,
+    .mobile-overlay,
+    .menu-toggle span {
+        transition: none;
+    }
+}
