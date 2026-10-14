@@ -1087,3 +1087,41 @@ h2{
         transition: none;
     }
 }
+
+/* =========================================
+   RECENT TRANSACTIONS - MOBILE HORIZONTAL SCROLL
+========================================= */
+
+.transactions-scroll {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+}
+
+/* Keep columns readable instead of squeezing them */
+.transactions-scroll .transaction-table {
+    width: 100%;
+    min-width: 700px;
+    border-collapse: collapse;
+}
+
+/* Keep transaction details on one line */
+.transactions-scroll .transaction-table th,
+.transactions-scroll .transaction-table td {
+    white-space: nowrap;
+}
+
+/* Phone layout */
+@media (max-width: 768px) {
+    .transactions-scroll {
+        width: 100%;
+        overflow-x: auto;
+        overscroll-behavior-x: contain;
+    }
+
+    .transactions-scroll .transaction-table {
+        min-width: 700px;
+    }
+}
